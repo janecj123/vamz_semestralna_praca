@@ -1,11 +1,11 @@
-package allKindOfGoods
+package data
 
 class Tovar( var meno: String, var cena: Double) {
 
     fun vypisInfo()
     {
-        println("Meno: $meno")
-        println("Cena: $cena€")
+        println("Meno: $meno Cena: $cena€")
+
     }
 
 

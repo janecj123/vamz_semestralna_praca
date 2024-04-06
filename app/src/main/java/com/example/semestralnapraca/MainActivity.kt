@@ -1,25 +1,21 @@
 package com.example.semestralnapraca
 
-import allKindOfGoods.Tovar
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.semestralnapraca.ui.theme.SemestralnaPracaTheme
+import data.Podnik
+import data.Tovar
+import data.Zakaznik
+
 
 fun main(){
-    var t1 = Tovar("Pizza",8.35)
-    var t2 = Tovar("Rezne",7.22)
-    var p = Podnik("Mania","Zilina")
-    p.pridajTovar(t1)
-    p.pridajTovar(t2)
-    p.vypisPonuku()
+    val t1 = Tovar("Pizza",8.35)
+    val t2 = Tovar("Rezne",7.22)
+    val p = Podnik("Mania","Zilina")
+    val z = Zakaznik("Jakub","Janec",26,"0948067869",
+        "Kysucke Nove Mesto","aaa")
+    z.vytvorObjednavku(p)
+    z.pridajDoObjednavky(t1)
+    z.pridajDoObjednavky(t2)
+    z.vypisObjednavku(0)
+
 
 }
 
