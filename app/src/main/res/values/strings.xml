@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">semestralnaPraca</string>
+    <string name="prihlasovacie_meno_label">Prihlasovacie meno</string>
+    <string name="heslo_label">Heslo</string>
+    <string name="nazov_aplikacie">Everything For Your Belly</string>
 </resources>
