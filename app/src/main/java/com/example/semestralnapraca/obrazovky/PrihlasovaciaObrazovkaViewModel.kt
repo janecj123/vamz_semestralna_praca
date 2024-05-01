@@ -1,15 +1,16 @@
-package data
+package com.example.semestralnapraca.obrazovky
 
 import androidx.lifecycle.ViewModel
+import data.Pouzivatel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class AplikaciaViewModel : ViewModel() {
+class PrihlasovaciaObrazovkaViewModel : ViewModel() {
 
-    private val _aktualnyStav = MutableStateFlow(AktualnyStav())
-    val aktualnyStav: StateFlow<AktualnyStav> = _aktualnyStav.asStateFlow()
+    private val _aktualnyStav = MutableStateFlow(Pouzivatel())
+    val aktualnyStav: StateFlow<Pouzivatel> = _aktualnyStav.asStateFlow()
 
     fun zmenaPrihlasovaciehoMeno(meno: String){
         _aktualnyStav.update { aktualnyStav -> aktualnyStav.copy(

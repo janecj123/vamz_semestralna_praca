@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation ("androidx.room:room-runtime:2.4.1")
+    //annotationProcessor "androidx.room:room-compiler:2.4.1"
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
