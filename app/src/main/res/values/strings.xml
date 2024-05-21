@@ -3,4 +3,6 @@
     <string name="prihlasovacie_meno_label">Prihlasovacie meno</string>
     <string name="heslo_label">Heslo</string>
     <string name="nazov_aplikacie">Everything For Your Belly</string>
+    <string name="prihlasit">PRIHLÁSIŤ</string>
+    <string name="registracia">REGISTRÁCIA</string>
 </resources>

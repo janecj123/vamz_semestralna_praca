@@ -10,10 +10,13 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PouzivatelDao {
-    @Query("SELECT * from PouzivatelInfo ORDER BY meno ASC")
+    @Query("SELECT * from Pouzivatel ORDER BY meno ASC")
     fun getPouzivatelia(): Flow<List<Pouzivatel>>
 
-    @Query("SELECT * from PouzivatelInfo WHERE pouzivatel = :pouzivatel")
+   // @Query("SELECT heslo FROM pouzivatelInfo WHERE meno = :meno")
+   // suspend fun overHeslo(meno: String): Pouzivatel?
+    
+    @Query("SELECT meno from Pouzivatel WHERE pouzivatel = :pouzivatel")
     fun getPouzivatel(pouzivatel: String): Flow<Pouzivatel>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
@@ -26,4 +29,8 @@ interface PouzivatelDao {
 
     @Delete
     suspend fun delete(item: Pouzivatel)
+
+
+
+
 }

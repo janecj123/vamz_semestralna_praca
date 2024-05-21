@@ -2,16 +2,14 @@ package data
 
 import kotlinx.coroutines.flow.Flow
 
-interface PouzivatelRepository {
+class PouzivatelRepository(private val pouzivatelDao: PouzivatelDao) : PouzivatelRepositoryInterface {
+    override fun getPouzivatelia(): Flow<List<Pouzivatel>> = pouzivatelDao.getPouzivatelia()
 
-        fun getAllItemsStream(): Flow<List<Pouzivatel>>
+    override fun getPouzivatel(meno: String): Flow<Pouzivatel?> = pouzivatelDao.getPouzivatel(meno)
 
-        fun getItemStream(meno: String): Flow<Pouzivatel?>
+    override suspend fun insertPouzivatel(pouzivatel: Pouzivatel) = pouzivatelDao.insert(pouzivatel)
 
-        suspend fun insertItem(pouzivatel: Pouzivatel)
+    override suspend fun deletePouzivatel(pouzivatel: Pouzivatel) = pouzivatelDao.delete(pouzivatel)
 
-        suspend fun deleteItem(pouzivatel: Pouzivatel)
-
-        suspend fun updateItem(pouzivatel: Pouzivatel)
-
+    override suspend fun updatePouzivatel(pouzivatel: Pouzivatel) = pouzivatelDao.update(pouzivatel)
 }
