@@ -1,5 +1,6 @@
 package com.example.semestralnapraca.obrazovky
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,12 +31,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.semestralnapraca.R
 
-@Preview(showBackground = true)
+import com.example.semestralnapraca.AppViewModelProvider
+import com.example.semestralnapraca.R
+import com.example.semestralnapraca.navigacia.NavigationDestination
+
+object PrihlasovanieDestination : NavigationDestination {
+    override val route = "prihlasovanie"
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewModel = viewModel()) {
-    val stavRozhrania by prihlasovanieViewModel.aktualnyPouzivatelStav.collectAsState()
+fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewModel = viewModel(
+    factory = AppViewModelProvider.Factory)) {
+    val prihlasovanieUiState by prihlasovanieViewModel.prihlasovanieUiState.collectAsState()
     val image = painterResource(R.drawable.pozadie_prihlasovacie)
 
   Box(modifier = Modifier.background(Color.Gray)) {
@@ -47,14 +58,14 @@ fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewMod
 
 
             HlavneOkno(
-                prihlasovacieMeno = stavRozhrania.pouzivatel,
-                prihlasovacieHeslo = stavRozhrania.heslo,
-                zadavanieMeno = { prihlasovanieViewModel.zmenaPrihlasovaciehoMeno(it) },
-                zadavanieHesla = { prihlasovanieViewModel.zmenaPrihlasovaciehoHeslo(it) },
+                prihlasovacieMeno = prihlasovanieViewModel.pouzivatelUiState.meno,
+                prihlasovacieHeslo = prihlasovanieViewModel.pouzivatelUiState.heslo,
+                zadavanieMeno = { prihlasovanieViewModel.pouzivatelUiState.zmenaPrihlasovaciehoMeno(it) },
+                zadavanieHesla = { prihlasovanieViewModel.pouzivatelUiState.zmenaPrihlasovaciehoHesla(it) },
                 stlacenieTlacidlaPrihlasit = {
-                    if(prihlasovanieViewModel.overPrihlasenie(stavRozhrania.pouzivatel,stavRozhrania.heslo))
-                    {stavRozhrania.pouzivatel = "JOLO"}},
-                stlacenieTlacidlaRegistracie = { prihlasovanieViewModel.registracia() })
+                    if(prihlasovanieViewModel.overPrihlasenie())
+                    {AktualnyPouzivatel().pouzivatel = "JOLO"}},
+                stlacenieTlacidlaRegistracie = { })
 
     }
 }
@@ -134,16 +145,19 @@ fun prihlasovacieRozhranie(prihlasovacieMeno : String,
 
             ) {
             Button(
-                { stlacenieTlacidlaRegistracie() }, Modifier.padding(10.dp)
-                    .size(140.dp,50.dp), colors = ButtonDefaults.buttonColors(Color.LightGray)
+                { stlacenieTlacidlaRegistracie() },
+                Modifier
+                    .padding(10.dp)
+                    .size(140.dp, 50.dp), colors = ButtonDefaults.buttonColors(Color.LightGray)
 
             ) {
                 Text(stringResource(R.string.registracia),
                     color = Color.Black)
             }
             Button(
-                modifier = Modifier.padding(10.dp)
-                    .size(140.dp,50.dp),
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(140.dp, 50.dp),
                 colors = ButtonDefaults.buttonColors(Color.LightGray),
                 onClick = { stlacenieTlacidlaPrihlasit() },
 
@@ -156,4 +170,10 @@ fun prihlasovacieRozhranie(prihlasovacieMeno : String,
 
 
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpustiObrazovku() {
+    PrihlasovaciaObrazovka()
 }

@@ -16,7 +16,7 @@ interface PouzivatelDao {
    // @Query("SELECT heslo FROM pouzivatelInfo WHERE meno = :meno")
    // suspend fun overHeslo(meno: String): Pouzivatel?
     
-    @Query("SELECT meno from Pouzivatel WHERE pouzivatel = :pouzivatel")
+    @Query("SELECT * from Pouzivatel WHERE pouzivatel = :pouzivatel")
     fun getPouzivatel(pouzivatel: String): Flow<Pouzivatel>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an

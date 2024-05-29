@@ -2,6 +2,7 @@ package data
 
 import kotlinx.coroutines.flow.Flow
 
+
 interface PouzivatelRepositoryInterface {
 
         fun getPouzivatelia(): Flow<List<Pouzivatel>>
