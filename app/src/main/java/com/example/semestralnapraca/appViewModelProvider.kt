@@ -5,8 +5,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.semestralnapraca.obrazovky.PrihlasovaciaObrazovkaViewModel
-import data.PouzivatelRepositoryInterface
+import com.example.semestralnapraca.view_modely.ObrazovkaRestauracieViewModel
+import com.example.semestralnapraca.view_modely.PrihlasovaciaObrazovkaViewModel
 
 
 object AppViewModelProvider {
@@ -14,7 +14,14 @@ object AppViewModelProvider {
 
         initializer {
             PrihlasovaciaObrazovkaViewModel(
+                this.createSavedStateHandle(),
                 thisApplication().container.pouzivatelRepositoryInterface
+            )
+        }
+        initializer {
+            ObrazovkaRestauracieViewModel(
+                this.createSavedStateHandle(),
+                thisApplication().container.restauraciaRepositoryInterface
             )
         }
     }

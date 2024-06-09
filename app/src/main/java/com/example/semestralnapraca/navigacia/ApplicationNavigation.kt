@@ -7,6 +7,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.semestralnapraca.obrazovky.PrihlasovaciaObrazovka
 import com.example.semestralnapraca.obrazovky.PrihlasovanieDestination
+import com.example.semestralnapraca.obrazovky.RegistraciaDestination
+import com.example.semestralnapraca.obrazovky.RestauracieDestination
+import com.example.semestralnapraca.obrazovky.hlavnaObrazovka
+
+
+import com.example.semestralnapraca.obrazovky.oknoRegistracie
+import com.example.semestralnapraca.view_modely.PrihlasovaciaObrazovkaViewModel
+import java.util.Collections.list
 
 
 @Composable
@@ -20,8 +28,18 @@ import com.example.semestralnapraca.obrazovky.PrihlasovanieDestination
         modifier = modifier
     ) {
         composable(route = PrihlasovanieDestination.route) {
-            PrihlasovaciaObrazovka()
+            PrihlasovaciaObrazovka(
+                onRegistrationClick = { navController.navigate(RegistraciaDestination.route) },
+                onLoginClick = { navController.navigate("${RestauracieDestination.route}/${it}") }
+            )
         }
-
+        composable(route = RegistraciaDestination.route) {
+            oknoRegistracie(
+                onSaveClick = { navController.navigate(PrihlasovanieDestination.route) },
+            )
+        }
+        composable(route = RestauracieDestination.route) {
+            hlavnaObrazovka(onItemClick = {}, onAddClick = { /*TODO*/ })
+        }
     }
 }

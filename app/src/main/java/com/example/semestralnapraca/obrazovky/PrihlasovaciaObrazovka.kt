@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.semestralnapraca.AppViewModelProvider
 import com.example.semestralnapraca.R
 import com.example.semestralnapraca.navigacia.NavigationDestination
+import com.example.semestralnapraca.view_modely.PrihlasenyPouzivatel
+import com.example.semestralnapraca.view_modely.PrihlasovaciaObrazovkaViewModel
 
 object PrihlasovanieDestination : NavigationDestination {
     override val route = "prihlasovanie"
@@ -43,41 +46,52 @@ object PrihlasovanieDestination : NavigationDestination {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewModel = viewModel(
-    factory = AppViewModelProvider.Factory)) {
+fun PrihlasovaciaObrazovka(
+    prihlasovanieViewModel: PrihlasovaciaObrazovkaViewModel = viewModel(
+        factory = AppViewModelProvider.Factory
+    ),
+    onRegistrationClick: () -> Unit,
+    onLoginClick: () -> Unit
+) {
     val prihlasovanieUiState by prihlasovanieViewModel.prihlasovanieUiState.collectAsState()
     val image = painterResource(R.drawable.pozadie_prihlasovacie)
 
-  Box(modifier = Modifier.background(Color.Gray)) {
-      Image(
-          modifier = Modifier.fillMaxSize(),
-          painter = image,
-          contentDescription = null
-      )
+    Box(modifier = Modifier.background(Color.Gray)) {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = image,
+            contentDescription = null
+        )
 
 
 
-            HlavneOkno(
-                prihlasovacieMeno = prihlasovanieViewModel.pouzivatelUiState.meno,
-                prihlasovacieHeslo = prihlasovanieViewModel.pouzivatelUiState.heslo,
-                zadavanieMeno = { prihlasovanieViewModel.pouzivatelUiState.zmenaPrihlasovaciehoMeno(it) },
-                zadavanieHesla = { prihlasovanieViewModel.pouzivatelUiState.zmenaPrihlasovaciehoHesla(it) },
-                stlacenieTlacidlaPrihlasit = {
-                    if(prihlasovanieViewModel.overPrihlasenie())
-                    {AktualnyPouzivatel().pouzivatel = "JOLO"}},
-                stlacenieTlacidlaRegistracie = { })
+        HlavneOkno(
+            prihlasovacieMeno = prihlasovanieViewModel.pouzivatelUiState.pouzivatel,
+            prihlasovacieHeslo = prihlasovanieViewModel.pouzivatelUiState.sifrovaneHeslo,
+            zadavanieMena = prihlasovanieViewModel::zmenaPrihlasovaciehoMena,
+            zadavanieHesla = prihlasovanieViewModel::zmenaPrihlasovaciehoHesla,
+            stlacenieTlacidlaPrihlasit = {
+                if (prihlasovanieViewModel.overPrihlasenie(prihlasovanieUiState.pouzivateliaList)) {
+
+                    //PrihlasenyPouzivatel.priradPouzivatela(prihlasovanieViewModel.pouzivatelUiState)
+                    onLoginClick()
+                }
+            },
+            stlacenieTlacidlaRegistracie = { onRegistrationClick()})
 
     }
 }
 
 @Composable
- fun HlavneOkno(prihlasovacieMeno : String,
-               prihlasovacieHeslo: String,
-               zadavanieMeno: (String) -> Unit,
-               zadavanieHesla: (String) -> Unit,
-               stlacenieTlacidlaPrihlasit: () -> Unit,
-               stlacenieTlacidlaRegistracie: () -> Unit,
-               modifier: Modifier = Modifier) {
+fun HlavneOkno(
+    prihlasovacieMeno: String,
+    prihlasovacieHeslo: String,
+    zadavanieMena: (String) -> Unit,
+    zadavanieHesla: (String) -> Unit,
+    stlacenieTlacidlaPrihlasit: () -> Unit,
+    stlacenieTlacidlaRegistracie: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -94,9 +108,11 @@ fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewMod
             //lineHeight = 70.sp,
             style = TextStyle(fontWeight = FontWeight.Bold)
         )
-        prihlasovacieRozhranie(prihlasovacieMeno,
+        prihlasovacieRozhranie(
+
+            prihlasovacieMeno,
             prihlasovacieHeslo,
-            zadavanieMeno,
+            zadavanieMena,
             zadavanieHesla,
             stlacenieTlacidlaPrihlasit,
             stlacenieTlacidlaRegistracie
@@ -104,30 +120,40 @@ fun PrihlasovaciaObrazovka(prihlasovanieViewModel: PrihlasovaciaObrazovkaViewMod
     }
 }
 
-    @Composable
-fun prihlasovacieRozhranie(prihlasovacieMeno : String,
-                           prihlasovacieHeslo: String,
-                           zadavanieMeno: (String) -> Unit,
-                           zadavanieHesla: (String) -> Unit,
-                           stlacenieTlacidlaPrihlasit: () -> Unit,
-                           stlacenieTlacidlaRegistracie: () -> Unit) {
+@Composable
+fun prihlasovacieRozhranie(
+    prihlasovacieMeno: String,
+    prihlasovacieHeslo: String,
+    zadavanieMena: (String) -> Unit,
+    zadavanieHesla: (String) -> Unit,
+    stlacenieTlacidlaPrihlasit: () -> Unit,
+    stlacenieTlacidlaRegistracie: () -> Unit
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         OutlinedTextField(
+            modifier = Modifier
+                .widthIn(max = 280.dp),
+            textStyle = TextStyle(color = Color.White),
             value = prihlasovacieMeno,
-            onValueChange = zadavanieMeno,
+            onValueChange = { zadavanieMena(it) },
             singleLine = true,
             label = {
                 Text(
                     stringResource(R.string.prihlasovacie_meno_label),
                     color = Color.White
                 )
-            })
+            }
+
+        )
 
 
         OutlinedTextField(
+            modifier = Modifier
+                .widthIn(max = 280.dp),
+            textStyle = TextStyle(color = Color.White),
             value = prihlasovacieHeslo,
-            onValueChange = zadavanieHesla,
+            onValueChange = { zadavanieHesla(it) },
             singleLine = true,
             label = {
                 Text(
@@ -144,15 +170,18 @@ fun prihlasovacieRozhranie(prihlasovacieMeno : String,
             horizontalArrangement = Arrangement.SpaceAround,
 
             ) {
-            Button(
-                { stlacenieTlacidlaRegistracie() },
-                Modifier
-                    .padding(10.dp)
-                    .size(140.dp, 50.dp), colors = ButtonDefaults.buttonColors(Color.LightGray)
+            Button( modifier = Modifier
+                .padding(10.dp)
+                .size(140.dp, 50.dp),
+                colors = ButtonDefaults.buttonColors(Color.LightGray),
+                onClick = { stlacenieTlacidlaRegistracie() }
+
 
             ) {
-                Text(stringResource(R.string.registracia),
-                    color = Color.Black)
+                Text(
+                    stringResource(R.string.registracia),
+                    color = Color.Black
+                )
             }
             Button(
                 modifier = Modifier
@@ -162,8 +191,10 @@ fun prihlasovacieRozhranie(prihlasovacieMeno : String,
                 onClick = { stlacenieTlacidlaPrihlasit() },
 
                 ) {
-                Text(stringResource(R.string.prihlasit),
-                    color = Color.Black)
+                Text(
+                    stringResource(R.string.prihlasit),
+                    color = Color.Black
+                )
             }
 
         }
@@ -172,8 +203,4 @@ fun prihlasovacieRozhranie(prihlasovacieMeno : String,
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SpustiObrazovku() {
-    PrihlasovaciaObrazovka()
-}
+

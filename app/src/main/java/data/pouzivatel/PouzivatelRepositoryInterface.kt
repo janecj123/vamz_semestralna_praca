@@ -1,5 +1,6 @@
-package data
+package data.pouzivatel
 
+import data.pouzivatel.Pouzivatel
 import kotlinx.coroutines.flow.Flow
 
 

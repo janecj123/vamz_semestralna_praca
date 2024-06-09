@@ -1,4 +1,4 @@
-package data
+package data.pouzivatel
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PouzivatelDao {
-    @Query("SELECT * from Pouzivatel ORDER BY meno ASC")
+    @Query("SELECT * from Pouzivatel order by pouzivatel")
     fun getPouzivatelia(): Flow<List<Pouzivatel>>
 
    // @Query("SELECT heslo FROM pouzivatelInfo WHERE meno = :meno")

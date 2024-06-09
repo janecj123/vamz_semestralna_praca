@@ -1,8 +1,9 @@
-package data
+package data.pouzivatel
 
 import kotlinx.coroutines.flow.Flow
 
-class PouzivatelRepository(private val pouzivatelDao: PouzivatelDao) : PouzivatelRepositoryInterface {
+class PouzivatelRepository(private val pouzivatelDao: PouzivatelDao) :
+    PouzivatelRepositoryInterface {
     override fun getPouzivatelia(): Flow<List<Pouzivatel>> = pouzivatelDao.getPouzivatelia()
 
     override fun getPouzivatel(meno: String): Flow<Pouzivatel?> = pouzivatelDao.getPouzivatel(meno)

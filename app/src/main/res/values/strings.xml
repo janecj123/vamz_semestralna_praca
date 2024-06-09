@@ -5,4 +5,13 @@
     <string name="nazov_aplikacie">Everything For Your Belly</string>
     <string name="prihlasit">PRIHLÁSIŤ</string>
     <string name="registracia">REGISTRÁCIA</string>
+    <string name="e_mail_label">E-mail</string>
+    <string name="meno_label">Meno</string>
+    <string name="priezvisko_label">Priezvisko</string>
+    <string name="pou_vate_sk_meno_label">Používateľské meno</string>
+    <string name="adresa_label">Adresa</string>
+    <string name="vek_label">Vek</string>
+    <string name="telefon_cislo_label">Telefoné číslo</string>
+    <string name="tlacidlo_registrovat">ZAREGISTROVAŤ</string>
+    <string name="tlacidlo_spat_top_bar">Naviguje dozadu</string>
 </resources>
