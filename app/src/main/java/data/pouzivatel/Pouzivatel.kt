@@ -15,11 +15,3 @@ data class Pouzivatel(
     var email: String = ""
 )
 
-//data class AktualnyPouzivatel(
-//    var pouzivatel: String=" ",
-//    var heslo : String =" ",
-//    var meno: String = " ",
-//    var vek: Int = 0,
-//    var cislo: Int = 0,
-//    var adresa: String = " "
-//)

@@ -1,6 +1,6 @@
 package data.restauracia
 
-import data.pouzivatel.Pouzivatel
+
 import kotlinx.coroutines.flow.Flow
 
 interface RestauraciaRepositoryInterface {

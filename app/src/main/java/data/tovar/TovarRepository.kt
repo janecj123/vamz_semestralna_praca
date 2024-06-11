@@ -1,8 +1,6 @@
 package data.tovar
 
-import data.restauracia.Restauracia
-import data.restauracia.RestauraciaDao
-import data.restauracia.RestauraciaRepositoryInterface
+
 import kotlinx.coroutines.flow.Flow
 
 class TovarRepository(private val tovarDao: TovarDao) :

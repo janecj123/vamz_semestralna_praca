@@ -28,15 +28,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
 import com.example.semestralnapraca.AppViewModelProvider
 import com.example.semestralnapraca.R
 import com.example.semestralnapraca.navigacia.NavigationDestination
-import com.example.semestralnapraca.view_modely.PrihlasenyPouzivatel
 import com.example.semestralnapraca.view_modely.PrihlasovaciaObrazovkaViewModel
 
 object PrihlasovanieDestination : NavigationDestination {
@@ -44,7 +41,7 @@ object PrihlasovanieDestination : NavigationDestination {
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun PrihlasovaciaObrazovka(
     prihlasovanieViewModel: PrihlasovaciaObrazovkaViewModel = viewModel(
@@ -73,11 +70,10 @@ fun PrihlasovaciaObrazovka(
             stlacenieTlacidlaPrihlasit = {
                 if (prihlasovanieViewModel.overPrihlasenie(prihlasovanieUiState.pouzivateliaList)) {
 
-                    //PrihlasenyPouzivatel.priradPouzivatela(prihlasovanieViewModel.pouzivatelUiState)
                     onLoginClick()
                 }
             },
-            stlacenieTlacidlaRegistracie = { onRegistrationClick()})
+            stlacenieTlacidlaRegistracie = { onRegistrationClick() })
 
     }
 }
@@ -170,7 +166,7 @@ fun prihlasovacieRozhranie(
             horizontalArrangement = Arrangement.SpaceAround,
 
             ) {
-            Button( modifier = Modifier
+            Button(modifier = Modifier
                 .padding(10.dp)
                 .size(140.dp, 50.dp),
                 colors = ButtonDefaults.buttonColors(Color.LightGray),
@@ -202,5 +198,6 @@ fun prihlasovacieRozhranie(
 
     }
 }
+
 
 

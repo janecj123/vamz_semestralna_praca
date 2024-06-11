@@ -1,8 +1,6 @@
 package com.example.semestralnapraca.obrazovky
 
-import androidx.annotation.Size
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,12 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-
-
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.semestralnapraca.AplikaciaTopBar
 import com.example.semestralnapraca.AppViewModelProvider
@@ -42,8 +37,6 @@ import com.example.semestralnapraca.navigacia.NavigationDestination
 import com.example.semestralnapraca.view_modely.ObrazovkaRestauracieViewModel
 import com.example.semestralnapraca.view_modely.PonukaRestauracieViewModel
 import com.example.semestralnapraca.view_modely.PrihlasenyPouzivatel
-
-import data.restauracia.Restauracia
 import data.tovar.Tovar
 
 object PonukaRestauracieDestination : NavigationDestination {
@@ -52,8 +45,13 @@ object PonukaRestauracieDestination : NavigationDestination {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ponukaRestauracieObrazovka(modifier: Modifier = Modifier, ponukaRestauracieViewModel: PonukaRestauracieViewModel
-= viewModel(factory = AppViewModelProvider.Factory), onAddClick: () -> Unit, onItemClick : ()  -> Unit) {
+fun ponukaRestauracieObrazovka(
+    modifier: Modifier = Modifier,
+    ponukaRestauracieViewModel: PonukaRestauracieViewModel
+    = viewModel(factory = AppViewModelProvider.Factory),
+    obrazovkaRestauracieViewModel: ObrazovkaRestauracieViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    onAddClick: () -> Unit
+) {
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val tovarUiState by ponukaRestauracieViewModel.tovarUiState.collectAsState()
@@ -65,7 +63,8 @@ fun ponukaRestauracieObrazovka(modifier: Modifier = Modifier, ponukaRestauracieV
                 pouzivatel = PrihlasenyPouzivatel.meno + " " + PrihlasenyPouzivatel.priezvisko,
                 mozePridavat = true,
                 scrollBehavior = scrollBehavior,
-                navigujDoPridavania = onAddClick
+                navigujDoPridavania = onAddClick,
+                cenaObjednavky = obrazovkaRestauracieViewModel.prihlasenyPouzivatelCenaObjednavkyState
             )
 
 
@@ -77,99 +76,114 @@ fun ponukaRestauracieObrazovka(modifier: Modifier = Modifier, ponukaRestauracieV
                 .padding(4.dp)
                 .fillMaxSize(),
             contentPadding = innerPadding,
-            onItemClick = onItemClick,
             zoznamRestauracie = ponukaRestauracieViewModel.vyberTovarResrauracie(tovarUiState.tovarList)
         )
     }
 }
 
-    @Composable
-    fun zoznamTovaru(
-        modifier: Modifier,
-        obrazovkaRestauracieViewModel: ObrazovkaRestauracieViewModel = viewModel(factory = AppViewModelProvider.Factory),
-        zoznamRestauracie: List<Tovar>,
-        contentPadding: PaddingValues = PaddingValues(0.dp),
-        onItemClick: () -> Unit = {}
+@Composable
+fun zoznamTovaru(
+    modifier: Modifier,
+    obrazovkaRestauracieViewModel: ObrazovkaRestauracieViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    zoznamRestauracie: List<Tovar>,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+
     ) {
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            modifier = modifier,
-            contentPadding = contentPadding,
-        ) {
-            items(
-                items = zoznamRestauracie,
-                key = { tovar -> tovar.tovarID }) { tovar ->
-                tovarRozlozenie(tovar = tovar, modifier = Modifier
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(1),
+        modifier = modifier,
+        contentPadding = contentPadding,
+    ) {
+        items(
+            items = zoznamRestauracie,
+            key = { tovar -> tovar.tovarID }) { tovar ->
+            tovarRozlozenie(tovar = tovar, modifier = Modifier
 
-                    .clickable {
-                        onItemClick()
-                    })
-
-            }
-
+                .clickable {
+                    obrazovkaRestauracieViewModel.pripocitajJedlo(tovar.cena)
+                    PrihlasenyPouzivatel.objednavka.add(tovar)
+                })
 
         }
+
+
     }
-        @Composable
-         fun tovarRozlozenie(tovar:Tovar, modifier:Modifier) {
-            Row(horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
+}
+
+@Composable
+fun tovarRozlozenie(tovar: Tovar, modifier: Modifier) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp)
+    )
+    {
+
+        Column(
+            modifier = modifier.height(80.dp), verticalArrangement = Arrangement.Bottom
+        ) {
+            Text(
+                text = tovar.vaha.toString() + "g",
+                color = Color.Black,
+                textAlign = TextAlign.Left,
             )
-            {
+        }
+        Column(
+            modifier = modifier.height(80.dp),
+        ) {
 
-                Column( modifier = modifier.height(80.dp),verticalArrangement = Arrangement.Bottom
-                    ) {
-                    Text(text = tovar.vaha.toString()  + "g",
-                        color= Color.Black,
-                        textAlign = TextAlign.Left,
-                        )
-                }
-                Column(modifier = modifier.height(80.dp),
-                    ) {
+            Column(
+                modifier = modifier
+                    .height(35.dp)
+                    .width(200.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = tovar.nazov,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 25.sp,
 
-                    Column(modifier = modifier.height(35.dp)
-                        .width(200.dp),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = tovar.nazov,
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                            fontSize = 25.sp,
-
-                            )
-
-                    }
-
-                        Column(modifier = modifier.height(45.dp)
-                            .width(200.dp),
-                            verticalArrangement = Arrangement.Bottom) {
-                            Text(
-                                text = stringResource(R.string.zlozenie) + tovar.popis,
-                                color = Color.Black,
-                                //textAlign = TextAlign.Center,
-                                fontSize = 10.sp
-                            )
-
-                        }
-
-                }
-
-                Column(modifier = modifier.height(80.dp)
-                        .padding(top = 20.dp),
-                    verticalArrangement = Arrangement.Bottom
-
-                   ) {
-                    Text(text = tovar.cena.toString() + "€",
-                        color = Color.Black,
-                        textAlign = TextAlign.Right,
-                        )
-
-                }
-
+                    )
 
             }
-            Divider(color = Color.Black, thickness = 1.dp)
+
+            Column(
+                modifier = modifier
+                    .height(45.dp)
+                    .width(200.dp),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Text(
+                    text = stringResource(R.string.zlozenie) + tovar.popis,
+                    color = Color.Black,
+                    //textAlign = TextAlign.Center,
+                    fontSize = 10.sp
+                )
+
+            }
+
         }
+
+        Column(
+            modifier = modifier
+                .height(80.dp)
+                .padding(top = 20.dp),
+            verticalArrangement = Arrangement.Bottom
+
+        ) {
+            Text(
+                text = tovar.cena.toString() + "€",
+                color = Color.Black,
+                textAlign = TextAlign.Right,
+            )
+
+        }
+
+
+    }
+    Divider(color = Color.Black, thickness = 1.dp)
+}

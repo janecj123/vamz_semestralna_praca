@@ -4,7 +4,7 @@ import android.app.Application
 import data.AppContainer
 import data.AppDataContainer
 
-class EFYBApplication : Application(){
+class EFYBApplication : Application() {
 
     lateinit var container: AppContainer
 

@@ -6,21 +6,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import data.restauracia.Restauracia
 import data.tovar.Tovar
 import data.tovar.TovarRepositoryInterface
 import kotlinx.coroutines.launch
 
-class PridavanieTovaruViewModel(private val tovarRepositoryInterface: TovarRepositoryInterface) : ViewModel() {
+//trieda sluzi na pridavanie noveho tovaru, udrziava v sebe stav pridavaneho tovaru
+//ak je tovar pripraveny na pridanie prida ho do databazy
+class PridavanieTovaruViewModel(private val tovarRepositoryInterface: TovarRepositoryInterface) :
+    ViewModel() {
 
     var pridavanyTovarUiState by mutableStateOf(PridavanyTovar())
 
 
-    fun pridajTovar(nazovRestauracie: String) : Boolean {
+    fun pridajTovar(nazovRestauracie: String): Boolean {
 
         if (pridavanyTovarUiState.nazov.isNotEmpty() || pridavanyTovarUiState.popis.isNotEmpty() ||
             pridavanyTovarUiState.cena.isNotEmpty()
-            || pridavanyTovarUiState.vaha.isNotEmpty()){
+            || pridavanyTovarUiState.vaha.isNotEmpty()
+        ) {
             var aktualnyTovar = pridavanyTovarUiState.toTovar(nazovRestauracie)
             viewModelScope.launch {
                 tovarRepositoryInterface.insertTovar(aktualnyTovar)
@@ -50,14 +53,13 @@ class PridavanieTovaruViewModel(private val tovarRepositoryInterface: TovarRepos
 }
 
 
-
 data class PridavanyTovar(
     var nazov: String = "",
-   var popis: String = "",
+    var popis: String = "",
     var cena: String = "",
     var vaha: String = ""
 ) {
-    fun toTovar(nazovRestauracia: String) : Tovar {
+    fun toTovar(nazovRestauracia: String): Tovar {
         return Tovar(
             nazov = nazov,
             popis = popis,

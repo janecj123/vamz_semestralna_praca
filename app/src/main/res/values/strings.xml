@@ -11,7 +11,21 @@
     <string name="pou_vate_sk_meno_label">Používateľské meno</string>
     <string name="adresa_label">Adresa</string>
     <string name="vek_label">Vek</string>
-    <string name="telefon_cislo_label">Telefoné číslo</string>
+    <string name="telefon_cislo_label">Telefónne číslo</string>
     <string name="tlacidlo_registrovat">ZAREGISTROVAŤ</string>
     <string name="tlacidlo_spat_top_bar">Naviguje dozadu</string>
+    <string name="add_button">Add button</string>
+    <string name="nazov_podniku_label">Názov podniku</string>
+    <string name="webova_stranka_label">Webová stránka</string>
+    <string name="pridat">VLOŽIŤ</string>
+    <string name="tlacidlopridaj">TlacidloPridaj</string>
+    <string name="nazov_tovaru_label">Názov Tovaru</string>
+    <string name="vaha_label">Hmotnosť</string>
+    <string name="cena_label">Cena</string>
+    <string name="popis_label">ZLoženie</string>
+    <string name="registracia_pouzivatela">Registrácia použivateľa</string>
+    <string name="pridavanie_podniku">Pridávanie podniku</string>
+    <string name="pridavanie_restauracie">Pridávanie reštaurácie</string>
+    <string name="pridavanie_tovaru">Pridávanie Tovaru</string>
+    <string name="zlozenie">"Zloženie: "</string>
 </resources>

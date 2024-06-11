@@ -2,7 +2,6 @@ package com.example.semestralnapraca.view_modely
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import data.restauracia.Restauracia
 import data.tovar.Tovar
 import data.tovar.TovarRepositoryInterface
 import kotlinx.coroutines.flow.SharingStarted
@@ -10,13 +9,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class PonukaRestauracieViewModel(private val tovarRepositoryInterface: TovarRepositoryInterface): ViewModel() {
+//trieda udrziava stav vsetkych tovarov ktore su v databaze nasledne ich vytriedi na tie ktore
+//sa maju zobrazit pomocou funkcie vyberTovarResrauracie
+class PonukaRestauracieViewModel(private val tovarRepositoryInterface: TovarRepositoryInterface) :
+    ViewModel() {
 
     val tovarUiState: StateFlow<TovarUiState> =
         tovarRepositoryInterface.getZoznamTovaru().map { TovarUiState(it) }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(PonukaRestauracieViewModel.TIMEOUT_MILLIS),
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = TovarUiState()
             )
 
@@ -32,6 +34,7 @@ class PonukaRestauracieViewModel(private val tovarRepositoryInterface: TovarRepo
             }
         }
         return filtrovanyZoznam.toList()
+
 
     }
 }

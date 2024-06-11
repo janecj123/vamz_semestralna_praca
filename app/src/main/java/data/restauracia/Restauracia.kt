@@ -2,7 +2,7 @@ package data.restauracia
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import data.tovar.Tovar
+
 
 @Entity
 data class Restauracia(
@@ -13,6 +13,4 @@ data class Restauracia(
     var cislo: String = "",
     var email: String = "",
     var webovaStranka: String = ""
-
-    //var ponuka: List<Tovar> = emptyList()
 )

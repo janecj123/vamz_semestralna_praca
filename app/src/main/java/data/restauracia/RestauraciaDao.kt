@@ -6,12 +6,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import data.pouzivatel.Pouzivatel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RestauraciaDao {
-    @Query("SELECT * from Restauracia order by nazov ASC")
+    @Query("SELECT * from Restauracia order by nazov")
     fun getZoznamRestauracii(): Flow<List<Restauracia>>
 
 

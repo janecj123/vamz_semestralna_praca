@@ -41,7 +41,7 @@ object PridavanieTovaruDestination : NavigationDestination {
 @Composable
 fun pridavanieTovaruObrazovka(
     onSaveClick: () -> Unit,
-      pridavanieTovaruViewModel: PridavanieTovaruViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    pridavanieTovaruViewModel: PridavanieTovaruViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -61,7 +61,8 @@ fun pridavanieTovaruObrazovka(
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            color = Color.White)
+            color = Color.White
+        )
 
         OutlinedTextField(
             modifier = Modifier
@@ -124,12 +125,13 @@ fun pridavanieTovaruObrazovka(
             onClick = {
                 if (pridavanieTovaruViewModel.pridajTovar(VybrataRestauracia.nazov)) {
                     onSaveClick()
-                }else {
+                } else {
 
                     coroutineScope.launch {
                         snackbarHostState.showSnackbar(
                             message = "ZlE ZADANÉ ÚDAJE",
-                            actionLabel = "OK",)
+                            actionLabel = "OK",
+                        )
                     }
                 }
             }) {

@@ -9,7 +9,7 @@ data class Tovar(
     var tovarID: Int = 0,
     var nazov: String = " ",
     var popis: String = " ",
-    var vek: Int = 0,
     var cena: Double = 0.0,
-    var vaha: Int = 0
+    var vaha: Int = 0,
+    var restauraciaKtorejPatri: String = ""
 )

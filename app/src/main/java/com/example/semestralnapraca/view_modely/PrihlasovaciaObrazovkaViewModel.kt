@@ -1,16 +1,14 @@
 package com.example.semestralnapraca.view_modely
 
-import android.content.Context
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import data.pouzivatel.Pouzivatel
-import data.pouzivatel.PouzivatelDatabase
 import data.pouzivatel.PouzivatelRepositoryInterface
-import data.restauracia.RestauraciaDatabase
+import data.tovar.Tovar
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -19,18 +17,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class PrihlasovaciaObrazovkaViewModel(savedStateHandle: SavedStateHandle,
-                                      private val pouzivatelRepositoryInterface: PouzivatelRepositoryInterface
+//trieda udrziava stav prihlasovania a registracie pouzivatela
+//tiez overuje spravnost zadanych prihlasovacich udajov
+class PrihlasovaciaObrazovkaViewModel(
+    private val pouzivatelRepositoryInterface: PouzivatelRepositoryInterface
 ) : ViewModel() {
 
     var pouzivatelUiState by mutableStateOf(AktualnyPouzivatel())
         private set
 
 
-    /**
-     * Holds home ui state. The list of items are retrieved from [ItemsRepository] and mapped to
-     * [HomeUiState]
-     */
+
     val prihlasovanieUiState: StateFlow<PrihlasovanieUiState> =
         pouzivatelRepositoryInterface.getPouzivatelia().map { PrihlasovanieUiState(it) }
             .stateIn(
@@ -82,7 +79,8 @@ class PrihlasovaciaObrazovkaViewModel(savedStateHandle: SavedStateHandle,
     fun getMenoAPriezvisko(): String {
         return pouzivatelUiState.meno + " " + pouzivatelUiState.priezvisko
     }
-    fun getVekAsString(): String{
+
+    fun getVekAsString(): String {
         return pouzivatelUiState.vek.toString()
     }
 
@@ -92,6 +90,7 @@ class PrihlasovaciaObrazovkaViewModel(savedStateHandle: SavedStateHandle,
             prihlasovanieUiState.first().pouzivateliaList
         }
     }
+
     fun zasifrujHeslo() {
         val zasifrovaneHeslo = StringBuilder()
         for (znak in pouzivatelUiState.heslo) {
@@ -100,38 +99,54 @@ class PrihlasovaciaObrazovkaViewModel(savedStateHandle: SavedStateHandle,
         pouzivatelUiState = pouzivatelUiState.copy(sifrovaneHeslo = zasifrovaneHeslo.toString())
     }
 
-  fun overPrihlasenie(pouzivateliaList:List<Pouzivatel>): Boolean {
+    fun overPrihlasenie(pouzivateliaList: List<Pouzivatel>): Boolean {
 
+        for (pouzivatel in pouzivateliaList) {
+            if (pouzivatel.pouzivatel == pouzivatelUiState.pouzivatel && pouzivatel.heslo == pouzivatelUiState.heslo) {
+                PrihlasenyPouzivatel.vek = pouzivatel.vek.toString()
+                PrihlasenyPouzivatel.meno = pouzivatel.meno
+                PrihlasenyPouzivatel.priezvisko = pouzivatel.priezvisko
+                PrihlasenyPouzivatel.cislo = pouzivatel.cislo
+                PrihlasenyPouzivatel.adresa = pouzivatel.adresa
+                PrihlasenyPouzivatel.pouzivatel = pouzivatel.pouzivatel
+                PrihlasenyPouzivatel.heslo = pouzivatel.heslo
 
-      var najdenyPouzivatel = false
-
-          for (pouzivatel in pouzivateliaList) {
-              if (pouzivatel.pouzivatel == pouzivatelUiState.pouzivatel && pouzivatel.heslo == pouzivatelUiState.heslo) {
-                  PrihlasenyPouzivatel.vek = pouzivatel.vek.toString()
-                  PrihlasenyPouzivatel.meno = pouzivatel.meno
-                  PrihlasenyPouzivatel.priezvisko = pouzivatel.priezvisko
-                  PrihlasenyPouzivatel.cislo = pouzivatel.cislo
-                  PrihlasenyPouzivatel.adresa = pouzivatel.adresa
-
-                  najdenyPouzivatel = true
-                  return najdenyPouzivatel
-              }
-          }
-
-      return najdenyPouzivatel;
-
-    }
-
-
-    fun overRegistraciu(): Boolean {
-        var najdenyPouzivatel = false
-        for (pouzivatel in PrihlasovanieUiState().pouzivateliaList) {
-            if (pouzivatel.pouzivatel == pouzivatelUiState.pouzivatel) {
-                najdenyPouzivatel = true
+                return true
             }
         }
-        return najdenyPouzivatel
+
+        return false
+
     }
+
+
+    fun overRegistraciu(pouzivateliaList: List<Pouzivatel>): Boolean {
+
+        for (pouzivatel in pouzivateliaList) {
+            if (pouzivatel.pouzivatel == pouzivatelUiState.pouzivatel) {
+
+
+                return true
+            }
+
+
+        }
+        if (pouzivatelUiState.pouzivatel.isEmpty() || pouzivatelUiState.meno.isEmpty() || pouzivatelUiState.priezvisko.isEmpty()
+            || pouzivatelUiState.heslo.isEmpty() || pouzivatelUiState.email.isEmpty() || pouzivatelUiState.adresa.isEmpty()
+            || pouzivatelUiState.vek.isEmpty() || pouzivatelUiState.cislo.isEmpty()
+        ) {
+            return true
+        }
+        PrihlasenyPouzivatel.pouzivatel = pouzivatelUiState.pouzivatel
+        PrihlasenyPouzivatel.vek = pouzivatelUiState.vek
+        PrihlasenyPouzivatel.meno = pouzivatelUiState.meno
+        PrihlasenyPouzivatel.priezvisko = pouzivatelUiState.priezvisko
+        PrihlasenyPouzivatel.cislo = pouzivatelUiState.cislo
+        PrihlasenyPouzivatel.adresa = pouzivatelUiState.adresa
+        PrihlasenyPouzivatel.heslo = pouzivatelUiState.heslo
+        return false
+    }
+
 
     fun ulozPouzivatela() {
         viewModelScope.launch {
@@ -144,10 +159,6 @@ class PrihlasovaciaObrazovkaViewModel(savedStateHandle: SavedStateHandle,
 
 
 
-
-/**
- * Ui State for HomeScreen
- */
 data class PrihlasovanieUiState(val pouzivateliaList: List<Pouzivatel> = listOf())
 
 data class AktualnyPouzivatel(
@@ -155,13 +166,14 @@ data class AktualnyPouzivatel(
     var heslo: String = "",
     var meno: String = "",
     var priezvisko: String = "",
-    var vek: String = "0",
+    var vek: String = "",
     var cislo: String = "",
     var adresa: String = "",
     var sifrovaneHeslo: String = "",
     var email: String = "",
-    var zostatok: Double = 0.0
-) {
+    var zostatok: Double = 0.0,
+
+    ) {
 
     fun toPouzivatel(): Pouzivatel {
         return Pouzivatel(
@@ -179,8 +191,11 @@ data class AktualnyPouzivatel(
     }
 }
 
+// drzi v sebe informacie o prihlasenom pouzivatelovi
 class PrihlasenyPouzivatel() {
-    companion object  {
+
+    companion object {
+        var cenaObjednavky: Double = 0.0
         var pouzivatel: String = ""
         var heslo: String = ""
         var meno: String = ""
@@ -191,6 +206,8 @@ class PrihlasenyPouzivatel() {
         var sifrovaneHeslo: String = ""
         var email: String = ""
         var zostatok: Double = 0.0
+        var objednavka: MutableList<Tovar> = mutableListOf()
+
 
         private var Instance: PrihlasenyPouzivatel = PrihlasenyPouzivatel()
         fun getPrihlasenyPouzivatel(): PrihlasenyPouzivatel {
@@ -203,7 +220,7 @@ class PrihlasenyPouzivatel() {
             heslo = aktualnyPouzivatel.heslo
             meno = aktualnyPouzivatel.meno
             priezvisko = aktualnyPouzivatel.priezvisko
-            vek = aktualnyPouzivatel.vek.toString()
+            vek = aktualnyPouzivatel.vek
             cislo = aktualnyPouzivatel.cislo
             adresa = aktualnyPouzivatel.adresa
             email = aktualnyPouzivatel.email
